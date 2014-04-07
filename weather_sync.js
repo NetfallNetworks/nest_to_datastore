@@ -11,6 +11,7 @@ var util, nest, comms;
 util = require('util');
 nest = require('../unofficial_nodejs_nest/index.js');
 comms = require('../unofficial_nodejs_nest/communications.js');
+kairos = require('./kairos.js');
 
 function trimQuotes(s) {
 	if (!s || s.length === 0) {
