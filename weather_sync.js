@@ -6,7 +6,7 @@
  *  logs in, reads status, constantly, for ever. :)
  *
  */"option strict";
-var util, nest, comms;
+var util, nest, comms, kairos;
 
 util = require('util');
 nest = require('../unofficial_nodejs_nest/index.js');
