@@ -6,11 +6,10 @@
  *  logs in, reads status, constantly, for ever. :)
  *
  */"option strict";
-var util, nest, comms, kairos;
+var util, nest, kairos;
 
 util = require('util');
 nest = require('../unofficial_nodejs_nest/index.js');
-comms = require('../unofficial_nodejs_nest/communications.js');
 kairos = require('./kairos.js');
 
 function trimQuotes(s) {
@@ -38,7 +37,8 @@ if (process.argv.length < 5) {
 var username = process.argv[2];
 var password = process.argv[3];
 var zip = process.argv[4];
-var kairosServer = trimQuotes(process.argv[5]);
+var kairosHostname = trimQuotes(process.argv[5]);
+var kairosServer = new kairos(kairosHostname);
 
 if (username && password) {
 	username = trimQuotes(username);
@@ -87,21 +87,9 @@ function postToDataStore() {
 		logData.push(current_wind);
 
 		console.log(logData);
-
-		var settings = {
-			hostname : kairosServer,
-			port : 80,
-			ssl : false,
-			path : '/api/v1/datapoints',
-			body : JSON.stringify(logData),
-			done : function(data) {
-				console.log('Posted to datastore');
-				console.log(data);
-				console.log('done.');
-			}
-		};
-
-		nest.post(settings);
+		console.log("kairos server" + kairosServer);
+		kairosServer.pushData(logData);
+		
 		console.log('done with weather.');
 	}, 'home.nest.com');
 
