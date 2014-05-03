@@ -92,6 +92,14 @@ function Kairos(hostname) {
 
 		this.kairosPost(settings);
 	};
+	
+	this.addDataPrefix = function(data, prefix) {
+		for (var element in data) {
+			if (data.hasOwnProperty(element)) {
+				data[element].name = prefix + data[element].name;
+			}
+		}
+	};
 }
 
 module.exports = Kairos;
