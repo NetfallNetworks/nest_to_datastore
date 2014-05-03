@@ -25,7 +25,7 @@ function trimQuotes(s) {
 }
 
 if (process.argv.length < 5) {
-	console.log('Usage: ' + process.argv[1] + ' USERNAME PASSWORD ZIP KAIROSERVER');
+	console.log('Usage: ' + process.argv[1] + ' USERNAME PASSWORD ZIP KAIROSSERVER');
 	console.log('');
 	console.log('USERNAME and PASSWORD should be enclosed in quotes.');
 	console.log('');
@@ -87,7 +87,7 @@ function postToDataStore() {
 		logData.push(current_wind);
 
 		console.log(logData);
-		console.log("kairos server" + kairosServer);
+				
 		kairosServer.pushData(logData);
 		
 		console.log('done with weather.');
