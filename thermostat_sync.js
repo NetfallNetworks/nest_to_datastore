@@ -78,6 +78,7 @@ function postToDataStore() {
 		for (var deviceId in data.device) {
 			if (data.device.hasOwnProperty(deviceId)) {
 				var device = data.shared[deviceId];
+				var online = data.track[deviceId].online;
 				console.log(util.format("%s [%s], Current temperature = %d F target=%d", device.name, deviceId, nest.ctof(device.current_temperature), nest.ctof(device.target_temperature)));
 
 				deviceTags = {
@@ -91,6 +92,8 @@ function postToDataStore() {
 				//console.log(data);
 				//console.log(device);
 				//console.log(data.device[deviceId].current_humidity);
+
+				//console.log(data.track[deviceId].online);
 
 				current_humidity = {};
 				current_humidity.name = 'current_humidity';
@@ -247,10 +250,13 @@ function postToDataStore() {
 				can_cool.tags = deviceTags;
 				logData.push(can_cool);
 
-				console.log(logData);
+				if (online) {
+					console.log(logData);
 
-				kairosServer.addDataPrefix(logData, "nest.device.");
-				kairosServer.pushData(logData);
+					kairosServer.addDataPrefix(logData, "nest.device.");
+					kairosServer.pushData(logData);
+
+				}
 
 			}
 
