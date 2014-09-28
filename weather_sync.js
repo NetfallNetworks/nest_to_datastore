@@ -10,7 +10,7 @@ var util, nest, kairos;
 
 util = require('util');
 nest = require('../unofficial_nodejs_nest/index.js');
-kairos = require('./kairos.js');
+cloudmine = require('./cloudmine.js');
 
 function trimQuotes(s) {
 	if (!s || s.length === 0) {
@@ -24,8 +24,8 @@ function trimQuotes(s) {
 	return s.substring(start, end);
 }
 
-if (process.argv.length < 5) {
-	console.log('Usage: ' + process.argv[1] + ' USERNAME PASSWORD ZIP KAIROSSERVER');
+if (process.argv.length < 7) {
+	console.log('Usage: ' + process.argv[1] + ' USERNAME PASSWORD ZIP APP_ID API_KEY');
 	console.log('');
 	console.log('USERNAME and PASSWORD should be enclosed in quotes.');
 	console.log('');
@@ -37,8 +37,9 @@ if (process.argv.length < 5) {
 var username = process.argv[2];
 var password = process.argv[3];
 var zip = process.argv[4];
-var kairosHostname = trimQuotes(process.argv[5]);
-var kairosServer = new kairos(kairosHostname);
+var app_id = process.argv[5];
+var api_key = process.argv[6];
+var cloudmineServer = new cloudmine(app_id, api_key);
 
 if (username && password) {
 	username = trimQuotes(username);
@@ -68,27 +69,29 @@ function postToDataStore() {
 		current_humidity = {};
 		current_humidity.name = 'nest.weather.current_humidity';
 		current_humidity.value = data.now.current_humidity;
-		current_humidity.timestamp = timestamp;
-		current_humidity.tags = weatherTags;
+		current_humidity.timestamp = timestamp;	
 		logData.push(current_humidity);
 
 		current_temperature = {};
 		current_temperature.name = 'nest.weather.current_temperature';
 		current_temperature.value = data.now.current_temperature;
 		current_temperature.timestamp = timestamp;
-		current_temperature.tags = weatherTags;
 		logData.push(current_temperature);
 
 		current_wind = {};
 		current_wind.name = 'nest.weather.current_wind';
 		current_wind.value = data.now.current_wind;
 		current_wind.timestamp = timestamp;
-		current_wind.tags = weatherTags;
 		logData.push(current_wind);
 
-		console.log(logData);
+		// console.log(logData);
 				
-		kairosServer.pushData(logData);
+		//kairosServer.pushData(logData);
+		logData.forEach(function(element) {		
+			cloudmineServer.addTags(element, weatherTags);
+			console.log(element);
+			cloudmineServer.pushData(element);
+		});
 		
 		console.log('done with weather.');
 	}, 'home.nest.com');
